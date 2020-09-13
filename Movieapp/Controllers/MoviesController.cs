@@ -40,7 +40,29 @@ namespace Movieapp.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("MovieDetail")]
+        public async Task<IActionResult> MovieDetail(string imdb)
+        {
+            List<MoviesModel> items = new List<MoviesModel>();
+            try
+            {
+                using (StreamReader r = new StreamReader("json/Movies.json"))
+                {
+                    string json = r.ReadToEnd();
+                    items = JsonConvert.DeserializeObject<List<MoviesModel>>(json);
+                }
 
-        
+                var details = items.Where(i => i.imdbID == imdb);
+                return new OkObjectResult(details);
+            }
+            catch (Exception e)
+            {
+
+                return new BadRequestResult();
+            }
+        }
+
+
     }
 }
